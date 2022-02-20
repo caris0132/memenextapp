@@ -1,0 +1,89 @@
+@import 'variables';
+.post-item {
+    margin-bottom: 24px;
+    padding: 20px 0 0;
+    &+& {
+        border-top: 1px solid rgba(0, 0, 0, .1);
+    }
+}
+
+.post-view {
+    border-radius: 4px;
+    background-color: #f4f4f4;
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 500px;
+        height: auto;
+    }
+}
+
+.post-title {
+    font-weight: bold;
+    font-size: 1.4em;
+    margin-bottom: 0.85rem;
+    &:hover a {
+        color: $mainColor
+    }
+}
+
+.post-header-left {
+    padding-right: 1rem;
+}
+
+.post-term-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: .5rem;
+    figure {
+        flex: 0 0 20px;
+        -ms-flex: 0 0 20px;
+        max-width: 20px;
+        width: 100%;
+        margin-bottom: 0;
+        margin-right: 10px;
+        height: 20px;
+        background-size: cover;
+        background-position: center center;
+        border-radius: 2px;
+    }
+}
+
+.post-term-header-title {
+    font-weight: normal;
+    font-size: 13px;
+    color: #999;
+    &:hover a {
+        color: #000
+    }
+}
+
+.post-dropdown-menu {
+    background-color: #fff;
+    border: 0 !important;
+    box-shadow: none !important;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    padding: 0;
+    outline: 0 !important;
+    &:after {
+        display: none;
+    }
+}
+
+.dots {
+    display: block;
+    width: 16px;
+    height: 20px;
+    background: url("/images/dots.png") center center no-repeat;
+    background-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+}

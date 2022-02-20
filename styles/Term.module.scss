@@ -1,0 +1,36 @@
+.term-title {
+    margin-bottom: 0;
+    font-weight: 400;
+    font-size: 14px;
+    text-transform: capitalize;
+    color: #000;
+    white-space: nowrap;
+}
+
+.term-image {
+    width: 25px;
+    height: 25px;
+    border-radius: 2px;
+    background-position: center center;
+    background-size: cover;
+    flex: 0 0 25px;
+    -ms-flex: 0 0 25px;
+    max-width: 25px;
+    margin-right: 0.5rem;
+}
+
+.term-content {
+    display: flex;
+    align-items: center;
+    height: 25px;
+}
+
+.term-item {
+    padding: 5px 15px 5px 15px;
+    margin-bottom: .5rem;
+    border-radius: 4px;
+    &:hover,
+    &.active {
+        background-color: #e0e0e0;
+    }
+}
