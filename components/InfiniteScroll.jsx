@@ -12,7 +12,7 @@ export default function InfiniteScroll({ items, setItems, apiUrl, children }) {
     const handleScroll = () => {
       if (
         window.scrollY + window.innerHeight >=
-          list.clientHeight + list.offsetTop - 300 &&
+          list.clientHeight + list.offsetTop - 1000 &&
         !loadMore
       ) {
         setLoadMore(!loadMore);

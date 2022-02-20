@@ -48,7 +48,7 @@ function Tag({ term, apiUrl }) {
   );
 }
 export async function getStaticPaths() {
-  const API_URL = process.env.API_URL;
+  const API_URL = process.env.APP_URL;
   const res = await fetch(`${API_URL}/api/term/all`);
   const data = await res.json();
   return {
@@ -59,7 +59,7 @@ export async function getStaticPaths() {
   };
 }
 export async function getStaticProps(context) {
-  const APP_URL = process.env.API_URL;
+  const APP_URL = process.env.APP_URL;
   const slug = context.params?.slug;
   const res_term = await fetch(`${APP_URL}/api/term/${slug}`);
   const data_term = await res_term.json();

@@ -115,7 +115,7 @@ function Detail({ item, meta, term, apiUrl }) {
   );
 }
 export async function getStaticPaths() {
-  const API_URL = process.env.API_URL;
+  const API_URL = process.env.APP_URL;
   const res = await fetch(`${API_URL}/api/post/1000post`);
   // console.log(`--------------------------------body--------------------------------`,await res.text());
   const data = await res.json();
@@ -130,7 +130,7 @@ export async function getStaticProps(context) {
   const slug = context.params?.slug;
   const postId = parseInt(slug.substring(slug.lastIndexOf("-") + 1));
   if (!postId) return { notFound: true };
-  const API_URL = process.env.API_URL;
+  const API_URL = process.env.APP_URL;
   const url = `${API_URL}/api/post/${postId}`;
   const res = await fetch(url);
   const data = await res.json();
