@@ -6,7 +6,9 @@ export default function DropZone({
   onChange,
   sendSuccess,
   setSendSuccess,
+  errors
 }) {
+  console.log(`dropzone errors = `, errors);
   const [preview, setPreview] = useState();
   const handlePreviewImg = (e) => {
     const file = e.target.files[0];

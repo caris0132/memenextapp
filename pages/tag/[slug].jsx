@@ -7,6 +7,7 @@ import InfiniteScroll from "../../components/InfiniteScroll";
 import PostItem from "../../components/Post/PostItem";
 import { useRouter } from "next/router";
 import queryString from "query-string";
+import SkeletonItem from "../../components/Skeleton/SkeletonItem";
 function Tag({ term, apiUrl }) {
   const route = useRouter();
   const slug = route.query.slug;
@@ -22,7 +23,10 @@ function Tag({ term, apiUrl }) {
     <>
       <Head>
         <title>{term.seo_title}</title>
+        <meta name="description" content={term.description} />
+        <term name="keywords" content={term.keyword} />
         <meta property="og:description" content={term.description} />
+        <link rel="canonical" href={term.url} />
         <meta property="og:title" content={term.seo_title} />
         <meta property="og:type" content="article" />
         <meta property="og:image:type" content={term.mimeType} />
@@ -39,8 +43,17 @@ function Tag({ term, apiUrl }) {
           <TheContent content={term.content} />
         </WrapContent>
       )}
-      {posts && (
-        <InfiniteScroll items={items} setItems={setItems} apiUrl={apiUrl}>
+      {items.length === 0 && (
+        <>
+          <SkeletonItem /> <SkeletonItem />
+        </>
+      )}
+      {items && (
+        <InfiniteScroll
+          items={items}
+          setItems={setItems}
+          apiUrl={apiUrl}
+        >
           <PostItem />
         </InfiniteScroll>
       )}
@@ -48,8 +61,8 @@ function Tag({ term, apiUrl }) {
   );
 }
 export async function getStaticPaths() {
-  const API_URL = process.env.APP_URL;
-  const res = await fetch(`${API_URL}/api/term/all`);
+  const APP_URL = process.env.API_URL2;
+  const res = await fetch(`${APP_URL}/api/term/all2`);
   const data = await res.json();
   return {
     paths: data.map((x) => ({
@@ -59,7 +72,7 @@ export async function getStaticPaths() {
   };
 }
 export async function getStaticProps(context) {
-  const APP_URL = process.env.APP_URL;
+  const APP_URL = process.env.API_URL2;
   const slug = context.params?.slug;
   const res_term = await fetch(`${APP_URL}/api/term/${slug}`);
   const data_term = await res_term.json();

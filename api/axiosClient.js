@@ -1,7 +1,7 @@
 import axios from 'axios';
 import queryString from 'query-string';
 const axiosClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_APP_URL + `/api`,
+    baseURL: process.env.NEXT_PUBLIC_API_URL + `/api`,
     headers: {
         'content-type': 'application/json'
     },

@@ -11,14 +11,16 @@ export default function handler(req, res) {
     }
 
     return new Promise((resolve) => {
-        req.headers.cookie = "";
-        proxy.web(req, res, {
-            target: process.env.API_URL,
-            changeOrigin: true,
-            selfHandleResponse: false,
-        });
-        proxy.once("proxyRes", () => {
-            resolve(true);
-        });
+        setTimeout(() => {
+            req.headers.cookie = "";
+            proxy.web(req, res, {
+                target: process.env.API_URL,
+                changeOrigin: true,
+                selfHandleResponse: false,
+            });
+            proxy.once("proxyRes", () => {
+                resolve(true);
+            });
+        }, 500);
     });
 }

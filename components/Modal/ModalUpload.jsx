@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  Button,
+  Alert, Button,
   Col,
   Form,
   FormFeedback,
@@ -11,17 +11,20 @@ import {
   Input,
   Modal,
   ModalBody,
-  Row,
+  Row
 } from "reactstrap";
 import axiosClient from "../../api/axiosClient";
 import { toggleModal } from "../../redux/actions/theme";
 import DropZone from "../DropZone/DropZone";
 function ModalUpload() {
-  const ref = useRef();
+  const ref_recaptcha = useRef();
   const GG_SITE = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE;
   const [sendSuccess, setSendSuccess] = useState(false);
+  const [r, setR] = useState(true);
+  const [successMessage, setSuccessMessage] = useState("");
   const dispatch = useDispatch();
   const openModal = useSelector((state) => state.theme.openModal);
+
   const handleModal = () => {
     dispatch(toggleModal(!openModal));
   };
@@ -30,8 +33,9 @@ function ModalUpload() {
     handleSubmit,
     reset,
     setError,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
+  console.log(`error length`,errors.length);
   const txt_title = register("txt_title", {
     required: "Vui lòng nhập tiêu đề",
     maxLength: {
@@ -51,43 +55,44 @@ function ModalUpload() {
   });
   const file = register("file");
   const onHandleSubmit = (data) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        let bodyFormData = new FormData();
-        bodyFormData.append("txt_title", data.txt_title);
-        bodyFormData.append("txt_content", data.txt_content);
-        bodyFormData.append("file", data.file[0]);
-        bodyFormData.append("gg_recaptcha".ref);
-        axiosClient
-          .post("/newsletter/send-meme", bodyFormData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            if (response.success === "fail") {
-              const errors = response.errors;
-              for (const key in errors) {
-                if (Object.hasOwnProperty.call(errors, key)) {
-                  const message = errors[key];
-                  setError(key, {
-                    type: "manual",
-                    message: message,
-                  });
-                }
-              }
+    setR(false);
+    setSendSuccess(false);
+    setSuccessMessage("");
+    let bodyFormData = new FormData();
+    bodyFormData.append("txt_title", data.txt_title);
+    bodyFormData.append("txt_content", data.txt_content);
+    bodyFormData.append("file", data.file[0]);
+    bodyFormData.append("gg_recaptcha",ref_recaptcha.current.getValue());
+    axiosClient
+      .post("/newsletter/send-meme", bodyFormData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        setR(true);
+        if (response.success === "fail") {
+          const errors = response.errors;
+          for (const key in errors) {
+            if (Object.hasOwnProperty.call(errors, key)) {
+              const message = errors[key];
+              setError(key, {
+                type: "manual",
+                message: message,
+              });
             }
-            if (response.success === "success") {
-              reset();
-              setSendSuccess(true);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        resolve();
-      }, 2000);
-    });
+          }
+        }
+        if (response.success === "success") {
+          reset();
+          setSendSuccess(true);
+          setSuccessMessage(response.messages);
+          ref_recaptcha.current.reset();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleCountTextLength = (e) => {
@@ -125,6 +130,7 @@ function ModalUpload() {
                       onChange={file.onChange}
                       sendSuccess={sendSuccess}
                       setSendSuccess={setSendSuccess}
+                      errors={errors}
                     />
                     {errors?.file && (
                       <FormFeedback className="d-block">
@@ -174,15 +180,23 @@ function ModalUpload() {
                     )}
                   </FormGroup>
                   <FormGroup>
-                    <ReCAPTCHA sitekey={GG_SITE} ref={ref} />
+                    <ReCAPTCHA sitekey={GG_SITE} ref={ref_recaptcha} />
                   </FormGroup>
                 </Col>
+
                 <Col xs="12" className="text-center">
-                  <Button color="success" type="submit" disabled={isSubmitting}>
-                    Gửi meme
-                  </Button>
+                  <FormGroup>
+                    <Button color="success" type="submit" disabled={!r}>
+                      Gửi meme
+                    </Button>
+                  </FormGroup>
                 </Col>
-                {isSubmitting && <div className="form-loading"></div>}
+                {r && successMessage && (
+                  <Col xs="12">
+                    <Alert color="success">{successMessage}</Alert>
+                  </Col>
+                )}
+                {!r && <div className="form-loading"></div>}
               </Row>
             </Form>
           </section>

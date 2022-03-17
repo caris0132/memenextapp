@@ -30,12 +30,10 @@ export default function Header() {
     let val = e.target.keyword.value;
     if (val) {
       const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
-      console.log(APP_URL);
       const url = queryString.stringifyUrl({
         url: `${APP_URL}/tim-kiem`,
         query: { keyword: val },
       });
-      console.log(url);
       window.location.href = url;
     }
   };

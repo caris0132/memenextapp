@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'react-loading-skeleton/dist/skeleton.css';
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import "nprogress/nprogress.css";
@@ -82,10 +83,11 @@ function MyApp({ Component, pageProps, footer, meta, term }) {
 }
 
 MyApp.getInitialProps = async () => {
-  const APP_URL = process.env.APP_URL;
-  const res_meta = await fetch(`${APP_URL}/api/page/init`);
+  const APP_URL = process.env.API_URL2;
+  
+  const res_meta = await fetch(`${APP_URL}/api/page/allmeta`);
   const meta = await res_meta.json();
-  const term_data = await fetch(`${APP_URL}/api/term/all`);
+  const term_data = await fetch(`${APP_URL}/api/term/all2`);
   const term = await term_data.json();
   const r_footer = await fetch(`${APP_URL}/api/layout/footer-content`);
   const footer = await r_footer.json();

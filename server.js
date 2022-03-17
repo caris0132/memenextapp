@@ -8,10 +8,7 @@ const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
     const server = express()
-
-    server.use("/assets", express.static(__dirname + "/public/assets"));
-    console.log(`__dirname`, __dirname);
-
+    server.use(express.static(__dirname + "/public"));
     server.all('*', (req, res) => {
         return handle(req, res)
     })

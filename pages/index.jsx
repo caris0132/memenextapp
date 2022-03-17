@@ -3,15 +3,16 @@ import React, { useState, useEffect } from "react";
 import InfiniteScroll from "../components/InfiniteScroll";
 import PostItem from "../components/Post/PostItem";
 import posts from "../api/posts";
+import SkeletonItem from "../components/Skeleton/SkeletonItem";
 export default function Home({ meta, apiUrl }) {
   const [items, setItems] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const post = await posts.all();
       setItems(post);
-    }    
+    };
     fetchData();
-  }, [posts]);
+  }, [apiUrl]);
   return (
     <>
       <Head>
@@ -30,7 +31,13 @@ export default function Home({ meta, apiUrl }) {
         <meta property="og:image" content={meta.share_image} />
       </Head>
       <h1 className="heading-invisible">{meta.site_name}</h1>
-      {posts && (
+      {items.length === 0 && (
+        <>
+          <SkeletonItem />
+          <SkeletonItem />
+        </>
+      )}
+      {items && (
         <InfiniteScroll items={items} setItems={setItems} apiUrl={apiUrl}>
           <PostItem />
         </InfiniteScroll>
@@ -39,7 +46,7 @@ export default function Home({ meta, apiUrl }) {
   );
 }
 export async function getStaticProps(context) {
-  const APP_URL = process.env.APP_URL;
+  const APP_URL = process.env.API_URL2;
   const res_home_page = await fetch(`${APP_URL}/api/page/home`);
   const data_home_page = await res_home_page.json();
 
@@ -48,6 +55,6 @@ export async function getStaticProps(context) {
       meta: data_home_page,
       apiUrl: `${APP_URL}/api/post`,
     },
-    revalidate: 60
+    revalidate: 60,
   };
 }

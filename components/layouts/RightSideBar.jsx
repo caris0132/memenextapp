@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import posts from "../../api/posts";
 import { Progress } from "reactstrap";
 import PostFeatured from "../Post/PostFeatured";
+import SkeletonSmallItem from "../Skeleton/SkeletonSmallItem";
 export default function RightSideBar() {
   const [items, setItems] = useState([]);
   const [loadMore, setLoadMore] = useState(false);
@@ -13,8 +14,7 @@ export default function RightSideBar() {
     const list = document.getElementById(`in2-scroll`);
     const handleScroll = () => {
       if (
-        list.scrollTop + list.clientHeight >=
-          list.children[0].scrollHeight &&
+        list.scrollTop + list.clientHeight >= list.children[0].scrollHeight &&
         !loadMore
       ) {
         setLoadMore(!loadMore);
@@ -41,7 +41,7 @@ export default function RightSideBar() {
     const getFirstData = async () => {
       const data = await posts.featured({ page: 1 });
       setItems(data);
-    }
+    };
     getFirstData();
   }, []);
 
@@ -67,6 +67,10 @@ export default function RightSideBar() {
         <div className="in2">
           <div className="in2-scroll" id="in2-scroll">
             <div className="infinite-list">
+              {items.length === 0 &&
+                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                  <SkeletonSmallItem key={num}/>
+                ))}
               {items.map((item) => {
                 return <PostFeatured item={item} key={item.id} />;
               })}
